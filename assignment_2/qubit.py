@@ -7,6 +7,12 @@ class Qubit:
         self.value: int = value
         self.polarization: Literal[0, 1] = polarization
 
+    def __eq__(self, other):
+        if not isinstance(other, Qubit):
+            return False
+
+        return self.value == other.value and self.polarization == other.polarization
+
     @property
     def is_circular_polarization(self) -> bool:
         return self.polarization == 0

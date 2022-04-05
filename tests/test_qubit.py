@@ -2,7 +2,6 @@ from assignment_2 import Qubit
 
 
 def test_init():
-    """Tests initialization sets values correct"""
     qubit: Qubit = Qubit(1, 1)
 
     assert qubit.value == 1
@@ -12,7 +11,6 @@ def test_init():
 
 
 def test_new():
-    """Tests the new classmethod works as expected."""
     qubit: Qubit = Qubit.new(1, 1)
 
     assert isinstance(qubit, Qubit)
@@ -21,9 +19,13 @@ def test_new():
     assert qubit.is_linear_polarization
     assert not qubit.is_circular_polarization
 
+    qubit_2: Qubit = qubit.new(1, 1)
+    assert isinstance(qubit_2, Qubit)
+    assert qubit == qubit_2
+    assert id(qubit) != id(qubit_2)
+
 
 def test_set():
-    """Tests setters work as expected."""
     qubit: Qubit = Qubit(1, 1)
     assert qubit.value == 1
     assert qubit.polarization == 1
