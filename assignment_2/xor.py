@@ -36,10 +36,10 @@ class XOR:
         if not isinstance(entry, str):
             raise ValueError(f"Expected str found {entry.__class__.__name__}")
 
-        _valid_lookups: Set[str] = {"0", "1"}  # Pre-computed fun
+        _valid_lookups: Set[str] = {"0", "1", " "}  # Pre-computed fun
         for char in entry:
             if char not in _valid_lookups:
-                raise ValueError(f"Expected only 1's or 0's, found {char}")
+                raise ValueError(f"Expected only 1's or 0's or spaces, found {char}")
 
     def __key_to_length(self, required_length: int) -> str:
         """
@@ -73,6 +73,10 @@ class XOR:
         for i, char in enumerate(message):
             if (char == "1" and key[i] == "1") or (char == "0" and key[i] == "0"):
                 output += "0"
+
+            elif char == " ":
+                output += " "
+
             else:
                 output += "1"
 

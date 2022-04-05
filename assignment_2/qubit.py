@@ -1,5 +1,6 @@
-import random
 from typing import Literal
+
+from assignment_2.util import gen_random
 
 
 class Qubit:
@@ -12,6 +13,9 @@ class Qubit:
             return False
 
         return self.value == other.value and self.polarization == other.polarization
+
+    def __repr__(self):
+        return f"Qubit(value={self.value}, polarization={self.polarization})"
 
     @property
     def is_circular_polarization(self) -> bool:
@@ -42,7 +46,7 @@ class Qubit:
             The value
         """
         if polarization != self.polarization:
-            value = random.choice((0, 1))
+            value = gen_random()
             self.set(value, polarization)
 
         return self.value
