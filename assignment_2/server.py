@@ -20,15 +20,15 @@ class Server:
         self._client.set_server(self)
 
         # Stream data qubits
-        for i in range(16):
+        for i in range(stream_length):
             qubit: Qubit = Qubit(gen_random(), gen_random())
             self.__qubit_stream.append(qubit)
 
             self._client.ingest_qubit(qubit)
 
-        self._client.finalize_key()
+        self._client.finalize_key_with_server()
 
-    def finalize_key(self, polarizations: List[int]) -> None:
+    def finalize_key_with_client(self, polarizations: List[int]) -> None:
         """
         Given the clients polarizations, figure out
         what the key should be using our local qubits.

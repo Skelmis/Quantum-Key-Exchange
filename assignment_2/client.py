@@ -42,7 +42,7 @@ class Client:
 
         self.__received_qubits.append(Qubit.new(qubit.value, qubit.polarization))
 
-    def finalize_key(self) -> None:
+    def finalize_key_with_server(self) -> None:
         """Finalize the key and lock Qubit ingest."""
         if self.__has_established_key:
             raise RuntimeError("Cannot re-establish a key")
@@ -61,7 +61,7 @@ class Client:
         self.__client_qubits = client_qubits
 
         # Go tell the server what polarizations we used
-        self._server.finalize_key(polars)
+        self._server.finalize_key_with_client(polars)
 
         # setup our xor
         key = "".join(str(i.value) for i in client_qubits)
