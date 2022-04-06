@@ -46,6 +46,14 @@ class MITM:
         # to immediately read
         self.__message_queue: Queue = Queue()
 
+        # Lets hook ourself to the server, so
+        # we can MITM without being detected
+        self.__server_establish_connection = self._server.establish_connection
+        self._server.establish_connection = self.injected_establish_connection
+
+    def injected_establish_connection(self, _, stream_length: int = 16):
+        self.__server_establish_connection(self, stream_length)  # type: ignore
+
     def set_server(self, server: "Server"):
         self._server = server
 
