@@ -4,12 +4,10 @@ from assignment_2 import util
 def test_gen_random():
     # This uses seeded randomness in tests
     # to ensure a reproducible environment
+    # Its also only 1 of 2 choices, so its
+    # quite the mediocre test
     assert util.gen_random() == 1
     assert util.gen_random() == 0
-    assert util.gen_random() == 1
-    assert util.gen_random() == 0
-    assert util.gen_random() == 1
-    assert util.gen_random() == 1
     assert util.gen_random() == 1
 
 
