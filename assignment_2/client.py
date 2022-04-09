@@ -68,7 +68,17 @@ class Client:
         self.__xor = XOR(key)
 
     def _raw_receive(self, message: str):
-        """Used by the server to mock transports"""
+        """Used by the server to mock transports
+
+        Raises
+        ------
+        RuntimeError
+            Cannot receive messages till a key
+            is established.
+        """
+        if not self.__has_established_key:
+            raise RuntimeError
+
         self.__message_queue.put_nowait(message)
 
     def read(self, *, as_binary: bool = False) -> str:
@@ -92,7 +102,13 @@ class Client:
         ------
         Empty
             No pending messages
+        RuntimeError
+            Cannot read unless the connection has
+            been established
         """
+        if not self.__has_established_key:
+            raise RuntimeError
+
         raw_message = self.__xor.decode(self.__message_queue.get_nowait())
         if not as_binary:
             raw_message = binary_string_to_string(raw_message)

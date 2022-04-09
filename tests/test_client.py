@@ -1,6 +1,10 @@
+import queue
+from queue import Empty
+from typing import List
+
 import pytest
 
-from assignment_2 import Client, Server, Qubit
+from assignment_2 import Client, Server, Qubit, util, XOR
 
 
 def test_set_server(client: Client, server: Server):
@@ -40,22 +44,77 @@ def test_invalid_finalize_key_with_server(client: Client):
 
 
 # noinspection PyUnresolvedReferences
-def test_valid_finalize_key_with_server(client: Client, server: Server):
+@pytest.mark.parametrize(
+    "stream_length",
+    [16, 256, 1024],
+)
+def test_valid_finalize_key_with_server(stream_length, client: Client, server: Server):
     assert client._Client__xor is None
     assert len(client._Client__client_qubits) == 0
     assert client._Client__has_established_key is False
 
-    # Some test setup
-    client.set_server(server)
-    qubits: List[Qubit] = [Qubit(1, 1), Qubit(1, 0), Qubit(0, 1)]
-    for q in qubits:
-        client.ingest_qubit(q)
-        server._Server__qubit_stream.append(q)
-
-    client.finalize_key_with_server()
+    server.establish_connection(client, stream_length)
     assert client._Client__xor is not None
-    assert len(client._Client__client_qubits) == 3
+    assert len(client._Client__client_qubits) != 0
     assert client._Client__has_established_key is True
 
 
-# def test_raw_receive(client: Client):
+# noinspection PyUnresolvedReferences
+@pytest.mark.parametrize(
+    "stream_length",
+    [16, 256, 1024],
+)
+def test_raw_receive(stream_length, client: Client, server: Server):
+    assert client._Client__message_queue.empty()
+    with pytest.raises(RuntimeError):
+        client._raw_receive(util.string_as_binary_string("Hello"))
+
+    server.establish_connection(client, stream_length)
+
+    client._raw_receive(util.string_as_binary_string("Hello"))
+
+    assert not client._Client__message_queue.empty()
+
+
+# noinspection PyUnresolvedReferences,DuplicatedCode
+@pytest.mark.parametrize(
+    "stream_length",
+    [16, 256, 1024],
+)
+def test_pending_message_amount(stream_length, client: Client, server: Server):
+    assert client.pending_message_amount == 0
+
+    server.establish_connection(client, stream_length)
+
+    client._raw_receive(util.string_as_binary_string("Hello"))
+    assert client.pending_message_amount == 1
+
+
+def test_invalid_read(client: Client):
+    with pytest.raises(RuntimeError):
+        client.read()
+
+    client._Client__xor = XOR("1010")
+    client._Client__has_established_key = True
+
+    with pytest.raises(Empty):
+        client.read()
+
+
+# noinspection PyUnresolvedReferences,DuplicatedCode
+@pytest.mark.parametrize(
+    "stream_length",
+    [16, 256, 1024],
+)
+def test_read(stream_length, client: Client, server: Server):
+    # setup
+    server.establish_connection(client, stream_length)
+
+    server.send("hello")
+    server.send("world")
+
+    assert client.read() == "hello"
+    assert client.read(as_binary=True) == "01110111 01101111 01110010 01101100 01100100"
+
+    with pytest.raises(queue.Empty):
+        client.read()
