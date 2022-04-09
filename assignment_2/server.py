@@ -59,7 +59,16 @@ class Server:
         is_already_binary: bool
             Whether or not the message is
             already a string of binary.
+
+        Raises
+        ------
+        RuntimeError
+            Client is not yet ready
+            to receive messages.
         """
+        if not self._client or not self.__shared_qubits:
+            raise RuntimeError
+
         if not is_already_binary:
             message = string_as_binary_string(message)
 
