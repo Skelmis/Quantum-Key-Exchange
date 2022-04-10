@@ -7,7 +7,7 @@ from assignment_2.util import (
     string_as_binary_string,
 )
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from assignment_2 import Client, Server
 
 

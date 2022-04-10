@@ -117,3 +117,17 @@ def test_mitm_send(stream_length, mitm: MITM):
         mitm.read()
 
     assert client.read() == "hello world"
+
+
+@pytest.mark.parametrize(
+    "stream_length",
+    [16, 256, 1024],
+)
+def test_connection_edge_case(stream_length, mitm: MITM):
+    """Test that you cannot connect twice"""
+    client: Client = mitm._client
+    server: Server = mitm._server
+    server.establish_connection(client, stream_length)
+
+    with pytest.raises(RuntimeError):
+        mitm.finalize_key_with_server()

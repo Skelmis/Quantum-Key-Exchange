@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Optional, List
 from assignment_2 import Qubit, XOR
 from assignment_2.util import gen_random, binary_string_to_string
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from assignment_2 import Server
 
 

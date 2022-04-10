@@ -1,3 +1,4 @@
+import typing
 import pytest
 
 from assignment_2 import Server, Client

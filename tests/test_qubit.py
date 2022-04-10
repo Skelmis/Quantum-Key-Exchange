@@ -62,3 +62,20 @@ def test_measure__different():
     assert isinstance(r_2, int)
     assert qubit_2.polarization == 1
     assert r_2 in (0, 1)
+
+
+def test_eq():
+    qubit: Qubit = Qubit(1, 1)
+    qubit_2: Qubit = Qubit(1, 0)
+    qubit_3: Qubit = Qubit(1, 1)
+
+    assert qubit != qubit_2
+    assert qubit == qubit_3
+
+    assert qubit != True
+
+
+def test_repr():
+    qubit: Qubit = Qubit(1, 1)
+    assert str(qubit) == "Qubit(value=1, polarization=1)"
+    assert repr(qubit) == "Qubit(value=1, polarization=1)"

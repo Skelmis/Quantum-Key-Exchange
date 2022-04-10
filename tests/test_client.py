@@ -3,6 +3,7 @@ from queue import Empty
 from typing import List
 
 import pytest
+import typing
 
 from assignment_2 import Client, Server, Qubit, util, XOR
 
