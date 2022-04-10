@@ -67,7 +67,7 @@ class Server:
             to receive messages.
         """
         if not self._client or not self.__shared_qubits:
-            raise RuntimeError
+            raise RuntimeError("Connection not yet established.")
 
         if not is_already_binary:
             message = string_as_binary_string(message)

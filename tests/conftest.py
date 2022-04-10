@@ -2,7 +2,7 @@ import random
 
 import pytest
 
-from assignment_2 import Client, Server
+from assignment_2 import Client, Server, MITM
 
 
 @pytest.fixture(autouse=True)
@@ -19,3 +19,8 @@ def client():
 @pytest.fixture
 def server():
     return Server()
+
+
+@pytest.fixture
+def mitm(client: Client, server: Server):
+    return MITM(client, server)
