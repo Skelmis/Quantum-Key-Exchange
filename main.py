@@ -16,12 +16,7 @@ def main():
     reads: List[str] = [client.read() for _ in range(client.pending_message_amount)]
     mitm_reads: List[str] = [mitm.read() for _ in range(mitm.pending_message_amount)]
     assert reads == mitm_reads
-
-    # Discuss difference between ssl stripping and
-    # actually eavesdropping the stream
-
-    # defenses talk
-    # look at tls auth process
+    print(reads)
 
 
 if __name__ == "__main__":
